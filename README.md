@@ -85,12 +85,12 @@ O setor de varejo de vestuário apresenta desafios recorrentes na gestão de inv
 |-------------------|--------------------------------|
 | Front-end         |       |
 | Back-end          |       |
-| Banco de Dados    |       |
+| Banco de Dados    | MySQL     |
 | Versionamento     | Git, GitHub                   |
 | Prototipação      | Figma                         |
 | IDE               | VS Code                       |
 
-> **Nota:** atualize esta tabela de acordo com as tecnologias efetivamente adotadas no projeto.
+> **Nota:** estamos atualizando esta tabela de acordo com as tecnologias efetivamente adotadas no projeto.
 
 ---
 
