@@ -90,7 +90,7 @@ O setor de varejo de vestuário apresenta desafios recorrentes na gestão de inv
 | Prototipação      | Figma                         |
 | IDE               | VS Code                       |
 
-> **Nota:** estamos atualizando esta tabela de acordo com as tecnologias efetivamente adotadas no projeto.
+> **Nota:** estamos atualizan esta tabela de acordo com as tecnologias efetivamente adotadas no projeto.
 
 ---
 
