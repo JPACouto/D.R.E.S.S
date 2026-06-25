@@ -15,10 +15,10 @@
 - [Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação e Configuração](#instalação-e-configuração)
-- [Utilização](#utilização)
+- [Autenticação](#autenticação)
+- [Endpoints da API](#endpoints-da-api)
 - [Estrutura do Projeto](#estrutura-do-projeto)
-- [Capturas de Tela](#capturas-de-tela)
-- [Contribuição](#contribuição)
+- [Testes](#testes)
 - [Autores](#autores)
 - [Licença](#licença)
 
@@ -45,65 +45,51 @@ O setor de varejo de vestuário apresenta desafios recorrentes na gestão de inv
 ## Funcionalidades
 
 ### Gestão de Produtos
-- Cadastro, edição e exclusão de peças de roupa (nome, categoria, tamanho, cor, marca, preço)
-- Busca e filtragem por múltiplos critérios (categoria, tamanho, cor, marca)
-- Gerenciamento de variações de produto (combinações de tamanho e cor)
-
-### Controle de Estoque
-- Registro de entradas e saídas de mercadorias
-- Configuração de estoque mínimo com alertas automáticos
-- Relatório de produtos com estoque crítico
-- Histórico completo de movimentações
-
-### Registro de Vendas
-- Abertura e fechamento de vendas com múltiplos itens
-- Aplicação de descontos por item ou sobre o total
-- Suporte a múltiplas formas de pagamento (dinheiro, cartão de crédito/débito, PIX)
-- Geração de comprovante de venda
+- Cadastro, edição e exclusão de produtos
+- Controle de preço e quantidade em estoque
+- Bloqueio de venda quando estoque é insuficiente
 
 ### Gestão de Clientes
 - Cadastro completo com dados pessoais e de contato
-- Histórico de compras vinculado ao cliente
-- Suporte a programa de fidelidade
+- Validação de CPF único e e-mail válido
+- Cliente com vendas registradas não pode ser excluído
 
-### Relatórios e Indicadores
-- Relatório de vendas por período (diário, semanal, mensal)
-- Ranking de produtos mais vendidos
-- Acompanhamento de faturamento
-- Painel com indicadores-chave de desempenho (KPIs)
+### Registro de Vendas
+- Registro de venda com múltiplos itens
+- Cálculo automático do valor total
+- Atualização automática do estoque após a venda (com transação no banco)
+
+### Relatórios
+- Relatório de vendas por período
+- Relatório de vendas por cliente
 
 ### Controle de Acesso
-- Autenticação de usuários com login e senha
-- Perfis de acesso diferenciados (Administrador e Vendedor)
-- Registro de log de ações por usuário
+- Autenticação via login e senha com token JWT
+- Senhas armazenadas com hash (BCrypt)
+- Perfis de acesso: `ADMIN` e `FUNCIONARIO`
+- Rotas protegidas por token, com restrição por perfil em ações sensíveis
 
 ---
 
 ## Tecnologias Utilizadas
 
-| Camada            | Tecnologia                     |
-|-------------------|--------------------------------|
-| Front-end         |       |
-| Back-end          |       |
-| Banco de Dados    | MySQL     |
-| Versionamento     | Git, GitHub                   |
-| Prototipação      | Figma                         |
-| IDE               | VS Code                       |
-
-> **Nota:** estamos atualizan esta tabela de acordo com as tecnologias efetivamente adotadas no projeto.
+| Camada            | Tecnologia                          |
+|-------------------|--------------------------------------|
+| Back-end          | Node.js, Express                    |
+| Front-end         | Django (Web) — *em desenvolvimento* |
+| Banco de Dados    | MySQL                                |
+| Autenticação      | JWT (jsonwebtoken) + BCrypt          |
+| Testes            | Jest                                 |
+| Versionamento     | Git, GitHub                          |
+| IDE               | VS Code                              |
 
 ---
 
 ## Pré-requisitos
 
-Antes de iniciar, verifique se as seguintes ferramentas estão instaladas no ambiente:
-
-- [Git](https://git-scm.com/) (versão 2.x ou superior)
-- [Node.js](https://nodejs.org/) (versão X.X ou superior)
-- [MySQL](https://www.mysql.com/) (versão X.X ou superior)
-- Navegador web atualizado (Chrome, Firefox, Edge)
-
-> Adapte os pré-requisitos conforme a stack utilizada.
+- [Node.js](https://nodejs.org/) (versão 18.x ou superior)
+- [MySQL](https://www.mysql.com/) (ou [XAMPP](https://www.apachefriends.org/), que já inclui o MySQL)
+- [Git](https://git-scm.com/)
 
 ---
 
@@ -113,3 +99,15 @@ Antes de iniciar, verifique se as seguintes ferramentas estão instaladas no amb
 
 ```bash
 git clone https://github.com/JPACouto/D.R.E.S.S
+cd D.R.E.S.S/backend
+```
+
+### 2. Instalar as dependências
+
+```bash
+npm install
+```
+
+### 3. Criar o banco de dados
+
+Crie um banco chamado `dress` no MySQL (via phpMyAdmin, MySQL Workbench ou terminal) e execute o script localizado em:
