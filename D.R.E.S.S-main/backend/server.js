@@ -1,3 +1,4 @@
+const initDatabase = require('./config/initDatabase');
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -24,7 +25,15 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 if (require.main === module) {
-  app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+  initDatabase()
+    .then(() => {
+      app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+    })
+    .catch((error) => {
+      console.error('Erro ao inicializar banco:', error.message);
+      process.exit(1);
+    });
 }
+
 
 module.exports = app;
