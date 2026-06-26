@@ -30,10 +30,10 @@ O sistema permite que uma loja de roupas gerencie seus produtos, clientes e vend
 - Dotenv
 
 ### Front-end
-- HTML
-- CSS
+
+- HTML5
+- CSS3
 - JavaScript
-- Bootstrap
 
 ### Banco de dados
 - MySQL
