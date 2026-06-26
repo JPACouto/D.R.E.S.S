@@ -303,9 +303,9 @@ Essa organização facilita a manutenção e escalabilidade da aplicação.
 
 # Integrantes
 
-- João Pedro Almeida Couto
-- Thiago de Pádua Bergamaschi
-- *(adicione os demais integrantes do grupo)*
+- João Pedro Couto
+- Thiago de Pádua 
+- Enzo Bastos
 
 ---
 
