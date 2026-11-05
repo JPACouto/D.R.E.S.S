@@ -6,13 +6,14 @@ O projeto segue [versionamento semântico](https://semver.org/lang/pt-BR/).
 ## [1.1.2] - 2026-11-05
 
 ### Corrigido
-- Porta da API no Dockerfile voltou para 3000 (a 1.1.1 subia na 3001 e o
-  healthcheck nunca passava)
+- Porta da API no Dockerfile voltou para 3000, igual ao docker-compose, para a
+  imagem funcionar também fora do compose
 
-## [1.1.1] - 2026-11-05 (não usar)
+## [1.1.1] - 2026-11-05
 
-- Release com a porta errada no Dockerfile. O deploy de produção falhou no
-  smoke test e fez rollback automático para a 1.1.0.
+### Alterado
+- `ENV PORT` do Dockerfile do backend mudou para 3001. Não afetou o deploy,
+  porque o docker-compose define `PORT: 3000` para o container.
 
 ## [1.1.0] - 2026-11-05
 

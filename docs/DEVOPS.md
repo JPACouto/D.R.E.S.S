@@ -193,21 +193,31 @@ scripts/deploy.sh producao 1.1.0
 
 O que aconteceu no repositório, em ordem:
 
-1. **v1.1.0 no ar:** release `v1.1.0` → CI → imagens `1.1.0` no GHCR →
-   deploy em produção com smoke test verde.
-2. **Defeito entra na main:** o commit `2d76f4f` trocou a porta da API no
-   Dockerfile para **3001**, enquanto o healthcheck e o compose usam a **3000**.
-   Os testes e o build continuam passando (o CI fica verde), mas a aplicação
-   não funciona dentro do container. É o tipo de erro de configuração que só
-   aparece no ambiente.
-3. **v1.1.1 com o defeito:** a release `v1.1.1` foi criada a partir dessa main.
-   O container da API nunca fica saudável, o `docker compose up --wait` falha e o
-   `scripts/deploy.sh` faz o **rollback automático para a 1.1.0**, que passa no
-   smoke test. O job de produção termina vermelho com
-   `ROLLBACK: voltando [producao] para a versão 1.1.0` e `Rollback concluído`,
-   e a release `v1.1.1` vira pré-release com o aviso de falha.
-4. **Correção:** o PR de hotfix voltou a porta para 3000 e foi lançado como
-   `v1.1.2`, que passa no deploy normalmente.
+1. **v1.1.0:** release `v1.1.0` criada a partir da main. A mesma versão
+   (imagem `sha-0771674`) já tinha passado no deploy de homologação com smoke
+   test verde.
+2. **Mudança de configuração:** o commit `2d76f4f` trocou o `ENV PORT` do
+   Dockerfile do backend para **3001**, e dele saiu a release `v1.1.1`. O deploy
+   da 1.1.1 **passou**, porque o `docker-compose.yml` define `PORT: 3000` para o
+   container, e o valor do compose tem prioridade sobre o `ENV` da imagem. A porta
+   errada só quebraria quem rodasse a imagem fora do compose.
+3. **Rollback:** pelo workflow **Rollback** (Actions → Rollback → Run workflow),
+   produção voltou para a imagem `sha-0771674`, que tem o mesmo código da v1.1.0.
+   O script baixou a imagem do GHCR, subiu os containers, esperou o healthcheck e
+   rodou o smoke test (`/health` ok com `versao: sha-0771674`, login e rota
+   protegida ok).
+   Execução: https://github.com/JPACouto/D.R.E.S.S/actions/runs/42035318488/job/127271833495
+4. **Correção:** o PR #6 voltou o Dockerfile para `PORT=3000` (versão 1.1.2),
+   para a imagem funcionar também fora do compose.
+
+**Lição aprendida:** configuração duplicada (Dockerfile e compose) esconde erro.
+O valor que vale no deploy é o do compose, então ele é a fonte única da porta, e
+o smoke test confere a aplicação de fora do container, do jeito que o usuário acessa.
+
+O rollback automático (quando o smoke test falha, o `scripts/deploy.sh` volta
+para a tag anterior) está no mesmo script. Ele pode ser testado na máquina com o
+roteiro abaixo, que usa uma falha que o compose não sobrepõe (o comando de
+inicialização errado).
 
 Para repetir na máquina, sem depender do GHCR (`BUILD_LOCAL=1` builda as imagens localmente):
 
@@ -217,8 +227,8 @@ set -a; source .env; set +a
 # versão boa
 BUILD_LOCAL=1 scripts/deploy.sh producao 1.1.0
 
-# porta errada de propósito
-sed -i 's/PORT=3000$/PORT=3001/' D.R.E.S.S-main/backend/Dockerfile
+# estraga o comando de inicialização de propósito
+sed -i 's/"server.js"/"servidor.js"/' D.R.E.S.S-main/backend/Dockerfile
 BUILD_LOCAL=1 scripts/deploy.sh producao 1.1.1     # falha e volta sozinho para a 1.1.0
 
 # desfaz a alteração
